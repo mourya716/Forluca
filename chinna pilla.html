@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>For Luca - Magic Journey & Smiles ✨</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@400;700&display=swap');
+html, body {
+  margin: 0; padding: 0; height: 100%; font-family: 'Quicksand', sans-serif;
+  background: #fff9e6; color: #222; min-height: 100vh; box-sizing: border-box; user-select: none; overflow-x: hidden;
+}
+.stars { position:fixed;top:0;left:0;width:100vw;height:100vh;background:radial-gradient(ellipse at center,#ffeebb 0%,transparent 70%);pointer-events:none;z-index:0;}
+.star {position:absolute;background:white;border-radius:50%;width:3px;height:3px;opacity:.7;animation:twinkle 3s infinite;}
+@keyframes twinkle {0%,100%{opacity:.7;}50%{opacity:.2;}}
+#passwordScreen {
+  position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%);
+  background: rgba(255,255,255,0.94); padding: 30px 40px; border-radius: 20px; box-shadow: 0 0 30px #f4e496; text-align: center; z-index: 10; width: 90%; max-width: 400px;
+}
+#mainContainer { position:absolute;top:0;left:0;width:100vw;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;overflow:auto;z-index:5;}
+#topBar { width:100%;max-width:560px;padding:18px 22px;display:flex;justify-content:space-between;align-items:center;margin:0 auto;margin-top:36px;background:transparent;}
+#topBar button {padding:9px 20px;border-radius:12px;border:none;background:#ffe69a;font-weight:700;cursor:pointer;font-size:1.1em;box-shadow:0 2px 9px #ecd167;}
+#contentWrap {width:100%;max-width:520px;margin:0 auto;display:flex;flex-direction:column;align-items:center;justify-content:center;}
+.page {
+  display:none; width:100%; min-height:430px; margin:0 auto; margin-top:48px;
+  padding:56px 22px 65px 22px; background:#fffbed;border-radius:28px;box-shadow:0 9px 45px #fbe8ba42;
+  text-align:center; color:#5a3e07; flex-direction:column;justify-content:center;align-items:center;
+}
+.page.active { display:flex; opacity:1; pointer-events:auto;}
+.magic-title { font-size:2.25rem; font-weight:700; color:#ba9006; letter-spacing:1.1px; margin-bottom:36px; margin-top:0;
+  text-shadow: 0 2px 10px #ffd966;
+}
+.magic-line { display:block; width:100%; text-align:center; font-size:1.23rem; margin:0 0 42px 0; line-height:1.7; color:#6a4c00;}
+.magic-emoji { font-size:2.4rem; margin-bottom:34px;}
+.navButtons {margin-top:auto;display:flex;justify-content:center;gap:28px;}
+.navButtons button {
+  cursor:pointer;background:#ffe699;border:none;padding:13px 28px;border-radius:15px;font-weight:700;font-size:1.08em;color:#9f7700;box-shadow:0 0 13px #ecd167;transition:.2s;}
+.navButtons button:disabled {opacity:0.4;cursor:default;}
+.navButtons button:hover:not(:disabled) {background:#fff3bc;}
+#finalBoxContainer {position:relative;width:220px;height:220px;margin:13px auto 0 auto;perspective:1000px;display:flex;justify-content:center;align-items:center;}
+#finalBox { width:220px;height:220px;background:linear-gradient(135deg,#f6d365 0%,#fda085 100%);
+  border-radius:24px;box-shadow:0 0 45px #f6d365aa inset;position:relative;cursor:pointer;transform-style:preserve-3d;transition:transform 2s cubic-bezier(0.4,0,0.2,1);overflow:visible;display:flex;align-items:center;justify-content:center;}
+#finalBox.opened{transform:rotateX(75deg) translateY(-60px);}
+#boxLid {position:absolute;top:0;left:0;width:220px;height:110px;background:linear-gradient(135deg,#fda085 0%,#f6d365 100%);
+  border-radius:24px 24px 0 0;box-shadow:0 0 20px #fda085aa inset;transform-origin:bottom center;transition:transform 2s cubic-bezier(0.4,0,0.2,1);backface-visibility:hidden;}
+#finalBox.opened #boxLid{transform:rotateX(-120deg);}
+#finalMessage {
+  position: absolute; top: 120px; left: 16px; width: 192px; text-align:center; font-size: 1.07rem; padding:15px;color:#4b3a00;
+  background:rgba(255,241,200,0.88);border-radius:14px;opacity:0;transition:opacity 1.5s ease 2s;}
+#finalBox.opened #finalMessage{opacity:1;}
+.magic-emoji-box {margin-top:38px;}
+#treasureModal {position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(251,245,203,0.93);z-index:30;display:none;align-items:center;justify-content:center;}
+#treasureModal.show {display:flex;}
+#treasureModalBox {background:white;padding:32px 36px;border-radius:19px;box-shadow:0 8px 18px #ffe58869;text-align:center;font-size:1.11em;color:#c88513;max-width:420px;margin:auto;}
+/* Jokes Mode */
+#jokesSection {display:none;width:100%;max-width:540px;margin:0 auto;} 
+#jokeCard {background:#fff9e6;border-radius:24px;box-shadow:0 0 15px #f6d365aa;
+  padding:37px 19px 34px 19px;margin:41px auto 0 auto;text-align:center;min-height:180px;display:flex;flex-direction:column;
+  justify-content:center;align-items:center;transition:.2s background;width:97%;}
+#jokeText {
+  font-size:1.14rem;min-height:53px;white-space:pre-line;margin-bottom:32px;font-family:'Quicksand',sans-serif;
+  transition:.28s color;text-align:center;line-height:1.57;word-break:break-word;padding:7px 0 7px 0;
+}
+.jokeButtons {display:flex;gap:17px;justify-content:center;margin-top:4px;}
+.jokeButtons button {
+  padding:10px 22px;border-radius:11px;font-weight:700;background:#ffe9b6;border:none;cursor:pointer;font-size:1em;box-shadow:0 0 8px #ebc67698;transition:.17s;}
+.jokeButtons button:hover {background:#fff3bc;}
+#compGenArea,#compGenAreaJokes {margin:23px auto 6px auto;max-width:460px;text-align:center;}
+#complimentArea,#complimentAreaJ {margin-top:13px;min-height:32px;font-size:1.08em;}
+#compBtn,#compBtnJ {font-size:1em;background:#ffd966;padding:8px 21px;border-radius:10px;border:none;box-shadow:0 0 8px #f6e8b288;margin-top:8px;font-weight:700;cursor:pointer;}
+#compBtn:hover,#compBtnJ:hover{background:#f6d365;}
+.sparkle {position:absolute;width:30px;height:30px;pointer-events:none;overflow:visible;animation:sparklebox .85s ease forwards;}
+@keyframes sparklebox {0%{transform:scale(0.6)rotate(0deg);opacity:.7;}50%{opacity:0.8;}80%{transform:scale(1.1)rotate(120deg);opacity:.5;}100%{transform:scale(0.7)rotate(190deg);opacity:0;}}
+.sparkle span {font-size:1.2rem;}
+.treasure {cursor:pointer;font-size:1.8em;vertical-align:middle;}
+</style>
+</head>
+<body>
+<div class="stars" id="stars"></div>
+<div id="passwordScreen">
+  <h2>Enter the magic key ✨</h2>
+  <input type="password" id="passwordInput" placeholder="Password" />
+  <button onclick="unlock()">Unlock</button>
+</div>
+<div id="mainContainer" style="display:none;">
+  <div id="contentWrap">
+    <!-- Top Bar -->
+    <div id="topBar">
+      <div style="font-weight:700;font-size:1.18em;color:#b98820;">For Luca ✨</div>
+      <button id="toggleModeBtn" onclick="toggleMode()">Jokes Mode</button>
+    </div>
+    <!-- Story Section -->
+    <div id="storySection">
+      <div class="page" id="page1">
+        <h1 class="magic-title">Welcome, Luca</h1>
+        <span class="magic-line">This journey is crafted only for you, step by step.
+          <span class="treasure" onclick="foundTreasure(1)" title="Find me!">🌟</span>
+        </span>
+        <div class="magic-emoji">✨</div>
+        <div class="navButtons">
+          <button disabled>Prev</button>
+          <button onclick="nextPage()">Next</button>
+        </div>
+      </div>
+      <div class="page" id="page2">
+        <h1 class="magic-title">The world hides magic in small moments</h1>
+        <span class="magic-line">Sometimes, the softest light shines through the tiniest cracks.</span>
+        <div class="magic-emoji">🌸</div>
+        <div class="navButtons"><button onclick="prevPage()">Prev</button><button onclick="nextPage()">Next</button></div>
+      </div>
+      <div class="page" id="page3">
+        <h1 class="magic-title">You brighten every room</h1>
+        <span class="magic-line">Your presence transforms ordinary days into surprises waiting to be discovered.</span>
+        <div class="magic-emoji">😊</div>
+        <div class="navButtons"><button onclick="prevPage()">Prev</button><button onclick="nextPage()">Next</button></div>
+      </div>
+      <div class="page" id="page4">
+        <h1 class="magic-title">Quiet moments, vivid memories</h1>
+        <span class="magic-line">There’s a gentle power in the way you make everything feel possible.
+          <span class="treasure" onclick="foundTreasure(2)" title="Find me!">🌟</span>
+        </span>
+        <div class="magic-emoji">🌠</div>
+        <div class="navButtons"><button onclick="prevPage()">Prev</button><button onclick="nextPage()">Next</button></div>
+      </div>
+      <div class="page" id="page5">
+        <h1 class="magic-title">Every smile tells a story</h1>
+        <span class="magic-line">And every glance is a secret message that only hearts can read.</span>
+        <div class="magic-emoji">😻</div>
+        <div class="navButtons"><button onclick="prevPage()">Prev</button><button onclick="nextPage()">Next</button></div>
+      </div>
+      <div class="page" id="page6">
+        <h1 class="magic-title">Step by step, moment by moment</h1>
+        <span class="magic-line">This space holds countless whispers of wonder, just for you.</span>
+        <div class="magic-emoji">🌼</div>
+        <div class="navButtons"><button onclick="prevPage()">Prev</button><button onclick="nextPage()">Next</button></div>
+      </div>
+      <div class="page" id="page7">
+        <h1 class="magic-title">The secret unfolds</h1>
+        <span class="magic-line">Like petals opening silently to welcome the sun,<br>patience reveals beauty.
+          <span class="treasure" onclick="foundTreasure(3)" title="Find me!">🌟</span>
+        </span>
+        <div class="magic-emoji box-magic">🌟</div>
+        <div class="navButtons"><button onclick="prevPage()">Prev</button><button onclick="nextPage()">Next</button></div>
+      </div>
+      <div class="page" id="page8">
+        <h1 class="magic-title">Here’s a little truth</h1>
+        <span class="magic-line">That no one else sees—only you.</span>
+        <div class="magic-emoji">😊</div>
+        <div class="navButtons"><button onclick="prevPage()">Prev</button><button onclick="nextPage()">Next</button></div>
+      </div>
+      <div class="page" id="page9">
+        <h1 class="magic-title">May you always find new light</h1>
+        <span class="magic-line">Even in the darkest skies, stars shine brighter than ever.</span>
+        <div class="magic-emoji">✨</div>
+        <div class="navButtons"><button onclick="prevPage()">Prev</button><button onclick="nextPage()">Next</button></div>
+      </div>
+      <div class="page" id="page10">
+        <h1 class="magic-title">Thank you for simply being you</h1>
+        <span class="magic-line">Special and rare, like a hidden gem the world keeps discovering.</span>
+        <div class="magic-emoji">💎</div>
+        <div class="navButtons"><button onclick="prevPage()">Prev</button><button onclick="nextPage()">Next</button></div>
+      </div>
+      <div class="page" id="page11">
+        <h1 class="magic-title">Almost there</h1>
+        <span class="magic-line">Ready for the surprise waiting just for you?</span>
+        <div class="magic-emoji">🎁</div>
+        <div class="navButtons"><button onclick="prevPage()">Prev</button><button onclick="nextPage()">Open</button></div>
+      </div>
+      <div class="page" id="page12" style="flex-direction:column;justify-content:center;">
+        <h1 class="magic-title">✨ Your surprise awaits ✨</h1>
+        <div id="finalBoxContainer" onclick="openBox()" aria-label="Magic box to open" role="button" tabindex="0">
+          <div id="finalBox"><div id="boxLid"></div>
+            <p id="finalMessage" style="margin-top:25px;">Nuv na chinna pilla ve yepatiki odhalanu aslaa yepatiki nuv kavali naaku untav kadhaaa odhaladhu nanu nen unda lenu amma.</p>
+          </div>
+        </div>
+        <div class="magic-emoji-box">🎉</div>
+        <div class="navButtons" style="margin-top:36px;">
+          <button onclick="prevPage()">Prev</button>
+          <button onclick="restart()">Restart</button>
+        </div>
+      </div>
+      <div id="compGenArea">
+        <button id="compBtn" onclick="showCompliment()">Get a Compliment 💖</button>
+        <div id="complimentArea"></div>
+      </div>
+    </div>
+    <!-- Jokes Section -->
+    <div id="jokesSection">
+      <div id="jokeCard">
+        <div id="jokeText"></div>
+        <div class="jokeButtons">
+          <button onclick="showPrevJoke()">Prev Joke 😊</button>
+          <button onclick="showNextJoke()">Next Joke 😂</button>
+          <button onclick="showRandomJoke()">Surprise Me! 🤩</button>
+        </div>
+      </div>
+      <div id="compGenAreaJokes"><button id="compBtnJ" onclick="showComplimentJ()">Get a Compliment 💖</button><div id="complimentAreaJ"></div></div>
+    </div>
+    <div id="treasureModal"><div id="treasureModalBox"></div></div>
+  </div>
+</div>
+<script>
+for(let i=0;i<65;i++){
+  const star=document.createElement('div');
+  star.className='star';
+  star.style.top=(Math.random()*100)+'vh';
+  star.style.left=(Math.random()*100)+'vw';
+  star.style.animationDelay=(Math.random()*3)+'s';
+  document.getElementById('stars').appendChild(star);
+}
+function unlock(){
+  const pass=document.getElementById('passwordInput').value;
+  if(pass==='mouriharu_433'){
+    document.getElementById('passwordScreen').style.display='none';
+    document.getElementById('mainContainer').style.display='flex';
+    showPage(1);
+  }else{
+    alert("Oops! That's not quite right. Try again!");
+    document.getElementById('passwordInput').value='';
+    document.getElementById('passwordInput').focus();
+  }
+}
+let currentPage=1;const totalPages=12;
+function showPage(num){
+  for(let i=1;i<=totalPages;i++){const page=document.getElementById('page'+i);if(page)page.classList.remove('active');}
+  const now=document.getElementById('page'+num);if(now)now.classList.add('active');
+  currentPage=num;document.getElementById("storySection").style.display='block';document.getElementById("jokesSection").style.display='none';
+  document.getElementById('toggleModeBtn').innerText='Jokes Mode';storyMode=true;resetTreasures();hideTreasureModal();
+}
+function nextPage(){if(currentPage<totalPages){showPage(currentPage+1);}}
+function prevPage(){if(currentPage>1){showPage(currentPage-1);}}
+function restart(){showPage(1);}
+let boxOpened=false;
+function openBox(){
+  if(boxOpened)return;boxOpened=true;
+  document.getElementById('finalBox').classList.add('opened');
+  document.getElementById('finalMessage').style.opacity='1';
+  makeSparkles(document.getElementById('finalBox'));
+}
+function closeBoxImmediate(){
+  boxOpened=false;
+  document.getElementById('finalBox').classList.remove('opened');
+  document.getElementById('finalMessage').style.opacity='0';
+  removeSparkles();
+}
+function makeSparkles(target){
+  removeSparkles();
+  for(let i=0;i<6;i++){
+    let s=document.createElement("div");
+    s.className="sparkle";
+    s.style.top=(48+Math.random()*33)+"px";
+    s.style.left=(58+Math.random()*70)+"px";
+    s.innerHTML=`<span>${["✨","🌟","💛","⭐","🎉","🥳"][i%6]}</span>`;
+    s.style.zIndex=2;
+    target.appendChild(s);
+  }
+  setTimeout(removeSparkles,900);
+}
+function removeSparkles(){document.querySelectorAll('.sparkle').forEach(s=>s.remove());}
+function showTreasureModal(msg){
+  document.getElementById('treasureModalBox').innerHTML=msg+"<br><br><button onclick='hideTreasureModal()' style='padding:6px 25px;border-radius:17px;background:#ffe588;border:none;font-weight:700;color:#b98820;box-shadow:0 2px 6px #fac371;'>OK</button>";
+  document.getElementById('treasureModal').classList.add('show');
+}
+function hideTreasureModal(){document.getElementById('treasureModal').classList.remove('show');}
+let treasuresFound = {};
+function foundTreasure(num){
+  if(treasuresFound[num])return;
+  treasuresFound[num]=true;
+  document.querySelectorAll('.treasure')[num-1]?.classList.add('found');
+  let msgs=[
+    "You found a star! 🌟<br><br>Here’s a secret:<br>You make every day brighter ✨",
+    "Hidden sparkle unlocked!<br><br>You always make everything special 💫",
+    "Wow, Explorer Luca!<br><br>You found all magic moments! 🎉"
+  ];
+  showTreasureModal(msgs[num-1]||"You found a treasure!");
+  if(Object.keys(treasuresFound).length===3){
+    setTimeout(()=>showTreasureModal("Wow, Explorer Luca!<br><br>You found ALL the magic moments in this journey! 🥳🌈"),750);
+  }
+}
+function resetTreasures(){
+  treasuresFound={};
+  document.querySelectorAll('.treasure').forEach(t=>t.classList.remove('found'));
+  hideTreasureModal();
+}
+let storyMode=true;
+function toggleMode(){
+  storyMode=!storyMode;
+  if(storyMode){
+    document.getElementById('storySection').style.display='block';
+    document.getElementById('jokesSection').style.display='none';
+    document.getElementById('toggleModeBtn').innerText="Jokes Mode";
+    resetTreasures();showPage(currentPage);hideTreasureModal();
+  }else{
+    document.getElementById('storySection').style.display='none';
+    document.getElementById('jokesSection').style.display='block';
+    document.getElementById('toggleModeBtn').innerText="Story Mode";
+    showJoke(currentJokeIndex);resetTreasures();hideTreasureModal();
+  }
+}
+const compliments = [
+  "You light up every room you enter! 😁💖","Your smile is absolutely contagious! 😍","You have the best sense of adventure! 🏝️✨",
+  "You make ordinary days feel magical. 🌟","You’re my favorite person to laugh with! 😂","You inspire me every single day! 🚀",
+  "Your creativity knows no limits! 🎨","You are the sunshine after every storm. 🌤️","You’re wonderfully unique! 🦄",
+  "Nobody shares joy quite like you do! 🥳","You could win every best friend contest! 🥇","You make happiness look easy! 😄",
+  "Your kindness is a superpower! 🦸‍♀️","You’re the puzzle piece that makes everything fit. 🧩", "You’re the reason for so many smiles! 😊"
+];
+function showCompliment(){
+  const area=document.getElementById('complimentArea');
+  let compliment=compliments[Math.floor(Math.random()*compliments.length)];
+  area.innerHTML="";let i=0;
+  function type(){if(i<compliment.length){area.innerHTML+=compliment.charAt(i);i++;setTimeout(type,32);}}type();showComplimentConfetti(area);
+}
+function showComplimentJ(){
+  const areaJ=document.getElementById('complimentAreaJ');
+  let compliment=compliments[Math.floor(Math.random()*compliments.length)];
+  areaJ.innerHTML="";let i=0;
+  function type(){if(i<compliment.length){areaJ.innerHTML+=compliment.charAt(i);i++;setTimeout(type,32);}}type();showComplimentConfetti(areaJ);
+}
+function showComplimentConfetti(el){
+  removeSparkles();
+  for(let i=0;i<2;i++){
+    let s=document.createElement("div");
+    s.className="sparkle";
+    s.style.top=(10+Math.random()*20)+"px";
+    s.style.left=(78+Math.random()*56)+"px";
+    s.innerHTML=`<span>${["🌈","✨","💖","😍"][i%4]}</span>`;
+    s.style.zIndex=2;
+    el.parentNode.appendChild(s);
+  }
+  setTimeout(removeSparkles,650);
+}
+const jokes = [
+  "Why did the scarecrow win an award? Because he was outstanding in his field! 🌾",
+  "I'm reading a book about anti-gravity. It's impossible to put down!",
+  "Why do cows have hooves instead of feet? Because they lactose.",
+  "Why don't eggs tell jokes? They'd crack each other up.",
+  "Why did the bicycle fall over? Because it was two-tired!",
+  "What do you call fake spaghetti? An Impasta!",
+  "Why don't skeletons fight each other? They don't have the guts.",
+  "What’s orange and sounds like a parrot? A carrot!",
+  "How do you organize a space party? You planet.",
+  "What do you call cheese that isn’t yours? Nacho cheese!",
+  "Why did the math book look sad? Because it had too many problems.",
+  "What did the ocean say to the beach? Nothing, it just waved.",
+  "Why can't you give Elsa a balloon? Because she might Let It Go.",
+  "Why did the golfer bring two pairs of pants? In case he got a hole in one!",
+  "I told my computer I needed a break, and it said 'No problem, I'll go to sleep.'",
+  "Why did the tomato turn red? Because it saw the salad dressing!",
+  "How does a penguin build its house? Igloos it together.",
+  "Why don't scientists trust atoms? Because they make up everything!",
+  "Why did the coffee file a police report? It got mugged.",
+  "Why was the broom late? It swept in.",
+  "Why couldn't the leopard play hide and seek? Because he was always spotted!",
+  "Why did the chicken join a band? Because it had the drumsticks.",
+  "What do you call a can opener that doesn't work? A can't opener.",
+  "Why do seagulls fly over the sea? Because if they flew over the bay, they’d be bagels.",
+  "Why did the cookie go to the hospital? Because it felt crummy.",
+];
+let currentJokeIndex=0, typingTimeout;
+function typeText(text,element,callback){
+  let i=0;element.innerHTML='';
+  function type(){if(i<text.length){element.innerHTML+=text.charAt(i);i++;typingTimeout=setTimeout(type,20);}else{if(callback)callback();}}
+  type();
+}
+function showJoke(index){
+  clearTimeout(typingTimeout);currentJokeIndex=(index+jokes.length)%jokes.length;
+  const jokeCard=document.getElementById("jokeCard");
+  const colors=["#fffbed","#ffeebb","#ffd4cb"];
+  jokeCard.style.background=colors[Math.floor(Math.random()*colors.length)];
+  showJokeConfetti();
+  typeText(jokes[currentJokeIndex],document.getElementById('jokeText'));
+}
+function showNextJoke(){showJoke(currentJokeIndex+1);}
+function showPrevJoke(){showJoke(currentJokeIndex-1);}
+function showRandomJoke(){
+  let randomIndex;
+  do{randomIndex=Math.floor(Math.random()*jokes.length);}while(randomIndex===currentJokeIndex);
+  showJoke(randomIndex);
+}
+function showJokeConfetti(){
+  const jokeCard=document.getElementById("jokeCard");
+  removeSparkles();
+  for(let i=0;i<1;i++){
+    let s=document.createElement("div");
+    s.className="sparkle";
+    s.style.top=(19+Math.random()*15)+"px";
+    s.style.left=(88+Math.random()*31)+"px";
+    s.innerHTML=`<span>${["😂","🤣","🥳"][i%3]}</span>`;
+    s.style.zIndex=3;
+    jokeCard.appendChild(s);
+  }
+  setTimeout(removeSparkles,400);
+}
+window.unlock=unlock;window.nextPage=nextPage;window.prevPage=prevPage;window.restart=restart;
+window.openBox=openBox;window.toggleMode=toggleMode;window.foundTreasure=foundTreasure;
+window.showNextJoke=showNextJoke;window.showPrevJoke=showPrevJoke;window.showRandomJoke=showRandomJoke;
+window.showCompliment=showCompliment;window.showComplimentJ=showComplimentJ;
+window.makeSparkles=makeSparkles;window.showTreasureModal=showTreasureModal;window.hideTreasureModal=hideTreasureModal;
+window.onload=function(){document.getElementById('passwordInput').focus(); showPage(1);}
+</script>
+</body>
+</html>
